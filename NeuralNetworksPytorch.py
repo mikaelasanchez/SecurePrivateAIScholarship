@@ -19,9 +19,9 @@ from torchvision import datasets, transforms
 
 # Define a transform to normalise the data
 transform = transforms.Compose([transforms.ToTensor(),
-                                transforms.Normalize((0.5, 0.5, 0.5),
-                                                     (0.5, 0.5, 0.5)),
-                                ])
+                                transforms.Normalize([0.5],
+                                                     [0.5]),
+                                ])  # use [0.5 0.5 0.5] for RGB
 
 # Download and load the training data with 64 images per batch
 trainSet = datasets.MNIST('MNIST_data/', download=True, train=True,
@@ -35,7 +35,7 @@ trainLoader = torch.utils.data.DataLoader(trainSet, batch_size=64,
 # 64 images per batch, 1 colour channel and 28x28 images
 
 dataIter = iter(trainLoader)
-images, labels = dataIter.__next__()
+images, labels = next(dataIter)
 
 print(type(images))
 print(images.shape)
