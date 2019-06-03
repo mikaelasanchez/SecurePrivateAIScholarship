@@ -3,6 +3,9 @@ This document contains notes from the Tensors in PyTorch Jupyter notebook
 to aid the author in learning about deep learning with PyTorch.
 """
 
+# Import PyTorch
+import torch
+
 # PyTorch is a framework for building and training neural networks
 # Numpy arrays are tensors
 # PyTorch moves these arrays to the GPU
@@ -28,9 +31,6 @@ to aid the author in learning about deep learning with PyTorch.
 '''
 Code practice
 '''
-
-# Import PyTorch
-import torch
 
 
 def activation(x):
@@ -75,6 +75,7 @@ y = activation(torch.sum(features * weights) + bias)
 # This is not matrix multiplication - pure python uses elementwise
 # multiplication
 
+print("Output with elementwise multiplication: ")
 print(y)
 
 # Note tensors don't have the correct shapes to perform matrix multiplication
@@ -82,12 +83,59 @@ print(y)
 # shape of weights to get matrix multiplication to work
 
 # In order to do this, you can use:
-# weights.reshape(a, b)
-# weights.resize_(a, b)
-# weights.view(a, b)
+# weights.reshape(a, b) - returns new tensor or a clone
+# weights.resize_(a, b) - returns same tensor
+# weights.view(a, b) - returns new tensor
 
 # Exercise: Calculate the output of this network using matrix multiplication
 
 y = activation(torch.mm(features, weights)+bias)
+print("\nOutput using single layer network: ")
 print(y)
 
+'''
+MultiLayer Networks
+'''
+
+# You can use the same inputs to power different hidden layers
+# Stacking units into layers will make a network of neurons
+# With multiple input units and output units, we now need to express weights
+# as a matrix
+
+# We can express a multilayer network mathematically:
+# h-> = [h_1 h_2] = [x_1 x_2 ... x_n]*[w_11 w_12
+#                                      w_21 w_22
+#                                      ...  ...
+#                                      w_n1 w_n2]
+# where h = hidden layer
+# w_11 = weights from node x_1 to h_1
+
+# The network output is found by treating the hidden layer as inputs for
+# the output unit. This is expressed by:
+# y = f_2(f_1(x->*W_1 + B1)*W_2 + B2)
+
+# 3 random normal variables
+features = torch.randn((1, 3))
+
+# Size of each layer
+n_input = features.shape[1]  # number of input units, matches input features
+n_hidden = 2                 # number of hidden units
+n_output = 1                 # number of output units
+
+# Weights for inputs to hidden layer
+W1 = torch.randn(n_input, n_hidden)
+# Weights for hidden layer to output layer
+W2 = torch.randn(n_hidden, n_output)
+
+# bias terms for hidden and output layers
+B1 = torch.randn((1, n_hidden))
+B2 = torch.randn((1, n_output))
+
+# Calculate the output for this multi-layer network using the weights
+# W1 and W2, and biases B1 and B2
+
+h = activation(torch.mm(features, W1) + B1)
+output = activation(torch.mm(h, W2) + B2)
+
+print("\nOutput using multilayer network: ")
+print(output)
