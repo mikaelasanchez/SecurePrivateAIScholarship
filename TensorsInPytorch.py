@@ -5,6 +5,7 @@ to aid the author in learning about deep learning with PyTorch.
 
 # Import PyTorch
 import torch
+import numpy as np
 
 # PyTorch is a framework for building and training neural networks
 # Numpy arrays are tensors
@@ -139,3 +140,17 @@ output = activation(torch.mm(h, W2) + B2)
 
 print("\nOutput using multilayer network: ")
 print(output)
+
+'''
+Converting Numpy to Torch and back
+'''
+
+a = np.random.rand(4, 3)
+b = torch.from_numpy(a)  # Numpy to torch
+b.numpy()                # Torch to numpy
+
+# Keep in mind that memory is shared between the array and tensor
+
+b.__mul__(2)
+# print(b) will return the same value as print(a)
+
