@@ -1,0 +1,73 @@
+Two columns of data: Calculation for Boundary
+
+---- Example ----
+x_1 = Test score
+x_2 = Grades
+
+Equation for score:
+2x_1 + x_2 - 18 = 0
+
+Prediction:
+Score > 0: Accept (y=1)
+Score < 0: Reject (y=0)
+
+Score: w_1x_1 + w_2x_2 + b = 0
+Abbreviation: Wx + b = 0
+
+W = (w_1, w_2)
+x = (x_1, x_2)
+
+x = input, w = weights, b = bias
+y = label: 0 or 1
+
+so each label is x_1x_2y
+
+Prediction y^ = { 1 if Wx + b >= 0
+                  o if Wx + b < 0 }
+
+Goal of algorithm: have y^ resemble y as closely as possible
+
+e.g. Student's test score: 7, grade: 6
+2(7) + (6) - 18 = 2
+2 > 0 so they are accepted
+
+--------
+
+n columns of data: Calculations
+
+Prediction y^ = { 1 if Wx + b >= 0
+                  o if Wx + b < 0 }
+
+n-dimensional space:
+x_1, x_2, ... , x_n
+
+label: y
+
+boundary: n-1 dimensional hyperplane
+equation: w_1x_1 + w_2x_2 + ... + w_nx_n + b = 0
+abbreviation: Wx + b = 0
+
+Dimensions:
+input features x: 1*n (columns)
+weights W: n*1 (rows)
+bias: 1*1
+
+Think of it as a table. Rows for each student, columns for their scores
+
+------
+
+Perceptrons:
+Takes the inputs and checks against the node.
+If positive, returns yes. If negative, returns no.
+
+In the score linear equation: 2*Test ++ 1*Grades - 18
+Test has weight 2 and Grades has weight 1
+Bias -18 will label the node
+Bias can also be another input, with its weight as 1
+
+The perceptron checks against the prediction
+
+The perceptron is a combination of nodes.
+The score uses a linear function and prediction, is the step function.
+
+---
