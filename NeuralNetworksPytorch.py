@@ -43,3 +43,4 @@ print(labels.shape)
 
 # Display image
 plt.imshow(images[1].numpy().squeeze(), cmap='Greys_r')
+plt.show()
