@@ -8,6 +8,8 @@ neural networks.
 # Import packages
 import torch.utils.data
 import matplotlib.pyplot as plt
+from torch import nn
+import torch.nn.functional as F
 
 
 # Building a neural network that will identify text in an image
@@ -115,3 +117,67 @@ probabilities = softmax(output)
 
 print(probabilities.shape)         # Check shape, should be (64, 10)
 print(probabilities.sum(dim=1))    # Should sum to 1
+
+# PyTorch provides a module called nn that makes building networks much
+# simpler. This is how to build the same one with:
+# 784 inputs, 256 hidden unites, 10 output units and softmax output
+
+
+class NumberNetwork(nn.Module):
+    def __init__(self):
+        super().__init__()
+
+        # Inputs to hidden layer
+        # Creates parameters for weights and bias
+        # and automatically calculates linear transformation
+        self.hidden = nn.Linear(784, 256)
+
+        # Output layer, 10 unites - one for each digit
+        self.output = nn.Linear(256, 10)
+
+        # Define sigmoid activation and softmax output
+        self.sigmoid = nn.Sigmoid()
+        self.softmax = nn.Softmax(dim=1)
+
+    def forward(self, x):
+        # Pass the input tensor through each operation
+        x = self.hidden(x)
+        x = self.sigmoid(x)
+        x = self.output(x)
+        x = self.softmax(x)
+
+        return x
+
+
+# Create the network and look at its text representation
+model = NumberNetwork()
+print(model)
+
+# We can define the network more concisely using torch.nn.functional
+# module. We usually import this as F.
+
+
+class NumberNetwork(nn.Module):
+    def __init__(self):
+        super().__init__()
+
+        # Inputs to hidden layer
+        self.hidden = nn.Linear(784, 256)
+        # Output layer, 10 unites - one for each digit
+        self.output = nn.Linear(256, 10)
+
+    def forward(self, x):
+        # Hidden layer with sigmoid activation
+        x = F.sigmoid(self.hidden(x))
+        # Output layer with softmax activation
+        x = F.softmax(self.output(x), dim=1)
+
+        return x
+
+# Activation Functions:
+# Sigmoid
+# TanH
+# ReLu
+
+# In practice, ReLu is used almost exclusively as the activation function
+# for hidden layers
