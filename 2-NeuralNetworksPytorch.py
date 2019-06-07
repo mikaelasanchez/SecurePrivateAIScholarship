@@ -10,7 +10,7 @@ import torch.utils.data
 import matplotlib.pyplot as plt
 from torch import nn
 import torch.nn.functional as F
-
+import numpy as np
 
 # Building a neural network that will identify text in an image
 # We will use the MNIST dataset, consisting of greyscale handwritten digits
@@ -44,7 +44,7 @@ print(images.shape)
 print(labels.shape)
 
 # Display image
-plt.imshow(images[1].numpy().squeeze(), cmap='Greys_r')
+# plt.imshow(images[1].numpy().squeeze(), cmap='Greys_r')
 plt.show()
 
 # Now we'll try to build a simple network using weight matrices and matrix
@@ -181,3 +181,60 @@ class NumberNetwork(nn.Module):
 
 # In practice, ReLu is used almost exclusively as the activation function
 # for hidden layers
+
+
+"""
+Custom Weights and Biases
+"""
+
+# You can look at the weights and biases for any layer,
+# for example, if you want to find them for the hidden layer
+print(model.hidden.weight)
+print(model.hidden.bias)
+
+# You can customise the hidden weights by typing
+model.hidden.bias.data.fill_(0)
+# This will fill the biases with 0
+# For random normal variables with standard deviation 0.01
+model.hidden.bias.data.normal_(std=0.01)
+
+"""
+Forward pass
+"""
+
+# Let's pass an image!
+# Grab some data
+dataIter = iter(trainLoader)
+images, labels = next(dataIter)
+
+# Resize images into a 1D vector
+# Shape: (batch size, colour channels, pixels)
+images.resize_(64, 1, 784)
+# or images.resize_(images.shape[0], 1, 784)
+
+# Forward pass through the network
+img_idx = 0
+ps = model.forward(images[img_idx, :])
+
+img = images[img_idx]
+img = img.view(1, 28, 28)
+
+
+# View the image
+
+ps = ps.data.numpy().squeeze()
+
+fig, (ax1, ax2) = plt.subplots(figsize=(6, 9), ncols=2)
+ax1.imshow(img.resize_(1, 28, 28).numpy().squeeze())
+ax1.axis('off')
+ax2.barh(np.arange(10), ps)
+ax2.set_aspect(0.1)
+ax2.set_yticks(np.arange(10))
+
+ax2.set_yticklabels(np.arange(10))
+
+ax2.set_title('Class Probability')
+ax2.set_xlim(0, 1.1)
+
+plt.tight_layout()
+plt.show()
