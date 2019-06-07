@@ -1,6 +1,9 @@
 <component name="ProjectDictionaryState">
   <dictionary name="Mika">
     <words>
+      <w>approximators</w>
+      <w>backpropagation</w>
+      <w>logits</w>
       <w>perceptron</w>
       <w>perceptrons</w>
       <w>softmax</w>
