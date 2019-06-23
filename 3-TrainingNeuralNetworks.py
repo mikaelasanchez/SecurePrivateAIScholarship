@@ -96,3 +96,98 @@ class. The input is expected to contain scores for each class.
 # very close to zero or one, but floats can't accurately
 # represent values near zero or one.
 # Typically we use log-probabilities
+
+from torch import nn
+import torch.utils.data
+from torchvision import datasets, transforms
+from torch import autograd
+from torch import optim
+
+# Define a transform to normalise the data
+transform = transforms.Compose([transforms.ToTensor(),
+                                transforms.Normalize(
+                                    [0.5],
+                                    [0.5]),
+                                ])
+# Download and load training data
+trainSet = datasets.MNIST('~/.pytorch/MNIST_data/',
+                          download=True, train=True,
+                          transform=transform)
+trainLoader = torch.utils.data.DataLoader(trainSet, batch_size=64, shuffle=True)
+
+# Build a feed forward network
+# This is only returning the logits
+model = nn.Sequential(nn.Linear(784, 128),
+                      nn.ReLU(),
+                      nn.Linear(128, 64),
+                      nn.ReLU(),
+                      nn.Linear(64, 10))
+
+# Define the loss
+criterion = nn.CrossEntropyLoss()
+
+# Get our data
+images, labels = next(iter(trainLoader))
+# Flatten the images
+images = images.view(images.shape[0], -1)
+
+# Forward pass through the model to get our logits
+logits = model(images)
+# Calculate the loss with the logits ans the labels
+loss = criterion(logits, labels)
+
+print(loss)
+
+# Now we know how to calculate a loss, we can use it in backpropagation!
+# We import autograd to automatically calculate the gradients of our parameters
+# wrt the loss
+# We need to set requires_grad = True on a tensor to keep track of operations
+# For example:
+
+x = torch.randn(2, 2, requires_grad=True)  # Creating a tensor with requires_grad
+
+# You can also toggle it globally using:
+torch.set_grad_enabled(True)
+
+# The grad_fn operation shows the function that generated a particular variable
+# for example:
+y = x**2
+print(y)
+print(y.grad_fn)
+
+# The autograd module keeps track of these operations and knows how to calculate
+# the gradient of each one.
+# Let's reduce the tensor y to a scalar value, the mean
+z = y.mean()
+print(z)
+
+# We can get the gradients after we calculate it, using the .backward method
+# This differentiates the variable
+z.backward()
+print(x.grad)
+print(x/2)
+
+# For training, we need the gradients of the weights with respect to cost
+# We do this by running data forward to calculate loss, then go backwards to
+# calculate the gradients wrt to loss
+# Once we have these, we can make a gradient descent step
+
+# So now, to train the network, we need an optimiser to update the weights with
+# the gradients. We get this from the optim package.
+# Let's try the stochastic gradient descent (optim.SGD)
+
+# Here we use parameters to optimise and learning rate
+optimiser = optim.SGD(model.parameters(), lr=0.01)
+
+# Remember you need to clear the gradients because gradients accumulate!
+optimiser.zero_grad()
+
+"""
+In short, the general PyTorch process goes:
+1 - forward pass
+2 - network output to calculate loss
+3 - backward pass with loss.backward() to calculate gradients
+4 - take a step with the optimiser to update weights
+
+each pass through the training set is called an epoch
+"""
