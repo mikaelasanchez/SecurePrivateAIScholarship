@@ -21,15 +21,9 @@ root/cat/789.png
 So these images will be loaded into their respective class labels
 """
 # Imports
-from torch import nn
 import torch.utils.data
 from torchvision import datasets, transforms
-from torch import autograd
-from torch import optim
-import torch.nn.functional as F
-import numpy as np
 import matplotlib.pyplot as plt
-import fc_model
 import helper
 
 transform = transforms.Compose([transforms.Resize(255),      # Re-sizes to square

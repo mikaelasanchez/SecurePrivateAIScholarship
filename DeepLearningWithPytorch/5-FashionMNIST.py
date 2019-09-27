@@ -31,7 +31,7 @@ testLoader = torch.utils.data.DataLoader(testSet,
                                          shuffle=True)
 
 
-# TODO: Define network architecture
+# Define network architecture
 model = nn.Sequential(nn.Linear(784, 256),
                       nn.ReLU(),
                       nn.Dropout(p=0.2),
@@ -44,12 +44,12 @@ model = nn.Sequential(nn.Linear(784, 256),
                       nn.Linear(64, 10),
                       nn.LogSoftmax(dim=1))
 
-# TODO: Create network, define criterion and optimiser
+# Create network, define criterion and optimiser
 # Adam speeds up fitting process and adjusts learning rate
 criterion = nn.CrossEntropyLoss()
 optimiser = optim.Adam(model.parameters(), lr=0.003)
 
-# TODO: Train the network
+# Train the network
 epochs = 10
 train_losses, test_losses = [], []
 for e in range(epochs):
@@ -92,7 +92,7 @@ for e in range(epochs):
               "Test Loss: {:.3f}.. ".format(test_loss/len(testLoader)),
               "Test Accuracy: {:.3f}".format(accuracy/len(testLoader)))
 
-# TODO: Test out network!
+# Test out network!
 # Grab some data
 images, labels = next(iter(trainLoader))
 img = images[0].view(1, 784)
